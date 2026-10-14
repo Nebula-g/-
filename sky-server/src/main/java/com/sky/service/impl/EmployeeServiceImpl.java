@@ -37,7 +37,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             //账号不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
-
+        //进行md5加密，再与数据库中的密码进行比对
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         //密码比对
         // TODO 后期需要进行md5加密，然后再进行比对
         if (!password.equals(employee.getPassword())) {
