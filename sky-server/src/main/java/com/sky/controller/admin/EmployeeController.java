@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -8,6 +9,8 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,7 @@ import java.util.Map;
 @RestController // 声明该类为 REST 风格控制器：方法的返回值会自动序列化为 JSON 写入响应体
 @RequestMapping("/admin/employee") // 将本类所有接口的 URL 统一映射到 /admin/employee 前缀下
 @Slf4j // Lombok 注解：自动生成名为 log 的日志对象，便于打印日志
+@Api(tags = "员工管理相关接口")
 public class EmployeeController {
 
     @Autowired // Spring 自动从容器中注入 EmployeeService 接口的实现类对象（EmployeeServiceImpl）
@@ -38,6 +42,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login") // 将 HTTP POST 请求映射到本方法，完整路径为 /admin/employee/login
+    @ApiOperation("员工登录")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) { // @RequestBody：将请求体中的 JSON 反序列化为 EmployeeLoginDTO 对象
         log.info("员工登录：{}", employeeLoginDTO);
 
@@ -67,7 +72,24 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/logout") // 将 HTTP POST 请求映射到本方法，完整路径为 /admin/employee/logout
+    @ApiOperation("员工退出")
     public Result<String> logout() {
+        return Result.success();
+    }
+
+    /**
+     * 新增员工
+     *
+     * @param employeeDTO
+     * @return
+     */
+    //@RequestBody:Spring MVC 提供的注解，标注在 Controller 方法的参数上，负责把前端请求体（Body）中的 JSON 数据，自动解析并封装成一个 Java 对象
+    @PostMapping
+    @ApiOperation("新增员工")
+    public Result save(@RequestBody EmployeeDTO employeeDTO){
+        log.info("新增员工：{}", employeeDTO.toString());
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
+        employeeService.save(employeeDTO);
         return Result.success();
     }
 
