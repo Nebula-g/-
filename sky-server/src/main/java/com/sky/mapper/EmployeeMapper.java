@@ -32,4 +32,10 @@ public interface EmployeeMapper {
      * @return
      */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);//由于这里是动态sql，所以注解方式编写会很麻烦（会用到动态标签）
+
+    /**
+     * 修改员工信息
+     * @param employee
+     */
+    void update(Employee employee);
 }
