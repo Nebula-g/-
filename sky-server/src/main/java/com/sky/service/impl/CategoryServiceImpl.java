@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
-import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,10 +41,9 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("新增分类：{}",categoryDTO);
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+        //新分类默认启用；不设的话 status 为 null，而下拉框查询是 where status = 1，会查不到
+        category.setStatus(StatusConstant.ENABLE);
+        //create_time/update_time/create_user/update_user 交给 AutoFillAspect 自动填充
         categoryMapper.insert(category);
     }
 
@@ -92,8 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("修改分类：{}",categoryDTO);
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
+        //update_time/update_user 交给 AutoFillAspect 自动填充
         categoryMapper.update(category);
     }
 
